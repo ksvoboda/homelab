@@ -1,8 +1,8 @@
 #!/bin/bash
-set -e
+# set -e
 
 # --- Configuration ---
-VIP="192.168.0.10" 
+VIP="192.168.0.10"
 # Dynamically find the default interface if you don't want to hardcode it
 INTERFACE=$(ip route get 8.8.8.8 | grep -Po '(?<=dev )[^ ]+' || echo "eth0")
 K3S_TOKEN="Th0rxLGGbI2qFMUp"
@@ -11,21 +11,56 @@ K3S_TOKEN="Th0rxLGGbI2qFMUp"
 # Function to check if the last command succeeded
 check_status() {
     if [ $? -ne 0 ]; then
-        echo "ERROR: $1 failed. See above for details."
+        echo "❌ ERROR: $1 failed. See above for details."
         exit 1
     else
-        echo "SUCCESS: $1 completed."
+        echo "✅ SUCCESS: $1 completed."
     fi
 }
 
 # Function to wait for a specific Kubernetes resource to be ready
-wait_for_resource() {
-    echo "Waiting for $1 to be ready..."
-    sleep 5
-    until kubectl get "$1" > /dev/null 2>&1; do
-        echo "  ...still waiting for $1..."
-        sleep 5
-    done
+wait_for_node() {
+    echo "⏳ Checking status of $1..."
+
+    # Capture both stdout and stderr into a variable
+    # We use 'set +e' temporarily to handle the error manually
+    set +e
+    OUTPUT=$(KUBECONFIG=/etc/rancher/k3s/k3s.yaml /usr/local/bin/kubectl get node "$1" 2>&1)
+    EXIT_CODE=$?
+    set -e
+
+    if [ $EXIT_CODE -eq 0 ]; then
+        echo "✅ Resource found:"
+        echo "$OUTPUT"
+        echo "---------------------------------------------------"
+        return 0
+    else
+        echo "❌ ERROR: Resource check failed!"
+        echo "Message: $OUTPUT"
+        exit 1
+    fi
+}
+
+wait_for_vip() {
+    echo "⏳ Checking status of "
+
+    # Capture both stdout and stderr into a variable
+    # We use 'set +e' temporarily to handle the error manually
+    set +e
+    OUTPUT=$(KUBECONFIG=/etc/rancher/k3s/k3s.yaml /usr/local/bin/kubectl get daemonset kube-vip-ds -n kube-system 2>&1)
+    EXIT_CODE=$?
+    set -e
+
+    if [ $EXIT_CODE -eq 0 ]; then
+        echo "✅ Resource found:"
+        echo "$OUTPUT"
+        echo "---------------------------------------------------"
+        return 0
+    else
+        echo "❌ ERROR: Resource check failed!"
+        echo "Message: $OUTPUT"
+        exit 1
+    fi
 }
 
 echo "Step 1: Installing K3s..."
@@ -39,9 +74,9 @@ curl -sfL https://get.k3s.io | sh -s - server \
   --write-kubeconfig-mode 644
 check_status "K3s installation"
 
-wait_for_resource "node $(hostname)"
+wait_for_node "$(hostname)"
 
-echo "Setting up firewalls rules..."
+echo "Step 2: Setting up firewalls rules..."
 
 sudo ufw default deny incoming
 sudo ufw default allow outgoing
@@ -57,20 +92,26 @@ sudo ufw enable
 
 check_status "Firewall configuration"
 
-echo "Step 2: Setting up kube-vip RBAC..."
+echo "Step 3: Setting up kube-vip RBAC..."
 
-mkdir -p /var/lib/rancher/k3s/server/manifests/
+sudo mkdir -p /var/lib/rancher/k3s/server/manifests/
 
-curl -sSL https://kube-vip.io/manifests/rbac.yaml > /var/lib/rancher/k3s/server/manifests/kube-vip-rbac.yaml
+sudo curl -sSL https://kube-vip.io/manifests/rbac.yaml | sudo tee /var/lib/rancher/k3s/server/manifests/kube-vip-rbac.yaml > /dev/null
 
 check_status "kube-vip RBAC download"
 
-echo "Step 3: Generating kube-vip DaemonSet..."
+echo "Step 4: Generating kube-vip DaemonSet..."
 
-KVVERSION=$(curl -sL https://github.com | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
+KVVERSION=$(curl -sL https://api.github.com/repos/kube-vip/kube-vip/releases | jq -r ".[0].name")
+
+export CONTAINERD_ADDRESS=/run/k3s/containerd/containerd.sock
+
+# 3. Pull the image into the k8s.io namespace first
+sudo ctr -n k8s.io image pull ghcr.io/kube-vip/kube-vip:"$KVVERSION"
+check_status "kube-vip image pull"
 
 # Run the container directly instead of using an alias
-sudo ctr run --rm --net-host "ghcr.io/kube-vip/kube-vip:$KVVERSION" vip /kube-vip manifest daemonset \
+sudo ctr -n k8s.io  run --rm --net-host "ghcr.io/kube-vip/kube-vip:$KVVERSION" vip /kube-vip manifest daemonset \
     --interface "$INTERFACE" \
     --address "$VIP" \
     --inCluster \
@@ -82,7 +123,7 @@ sudo ctr run --rm --net-host "ghcr.io/kube-vip/kube-vip:$KVVERSION" vip /kube-vi
 
 check_status "kube-vip manifest generation"
 
-echo "Step 4: Verifying Virtual IP (VIP) Activation..."
+echo "Verifying Virtual IP (VIP) Activation..."
 echo "Waiting for kube-vip to bind $VIP to $INTERFACE..."
 sleep 15 # Give the DaemonSet time to pull the image and start
 
@@ -99,13 +140,13 @@ else
     fi
 fi
 
-echo "Setting KUBECONFIG path..."
+echo "Step 5: Setting KUBECONFIG path..."
 echo "export KUBECONFIG=/etc/rancher/k3s/k3s.yaml" >> ~/.bashrc
 
-echo "Step 4: Final verification..."
+echo "Step 6: Final verification..."
 # Give K3s a moment to pick up the new manifest
 sleep 10
-wait_for_resource "daemonset kube-vip-ds -n kube-system"
+wait_for_vip
 
 echo "---------------------------------------------------"
 echo "INSTALLATION SUCCESSFUL"

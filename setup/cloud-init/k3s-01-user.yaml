@@ -1,0 +1,26 @@
+#cloud-config
+hostname: k3s-01
+manage_etc_hosts: true
+
+users:
+  - name: kube
+    groups: [sudo]
+    shell: /bin/bash
+    ssh_pwauth: true
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    lock_passwd: false
+    passwd: "$6$IEgghGX349ip8hwf$hCa1X/iMMRT8LQpW3vYvKljg7lZhY8t3et3O0PDssj6BImK9m0VaJxr25bCf.mmqKsOanID8AI30s4iLLnyp21"
+    ssh_authorized_keys:
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJ7sWGe3K2HYg3SHgOBVlfAXxGWIWuzU/trMOUAtzs1k krystof@krystofs-pc
+
+package_update: true
+packages: [curl, jq, open-iscsi, nfs-common, iptables, qemu-guest-agent]
+
+runcmd:
+  - swapoff -a
+  - sed -i '/swap/d' /etc/fstab
+  - echo "cgroup_enable=cpuset cgroup_enable=memory cgroup_memory=1" >> /etc/default/grub.d/k3s.cfg
+  - update-grub
+  - curl -OL https://raw.githubusercontent.com/ksvoboda/homelab/refs/heads/main/setup/k3s-init.sh
+
+power_state: {mode: reboot, condition: true}

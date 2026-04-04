@@ -14,13 +14,14 @@ spec:
     helm:
       values: |
         ingress:
+          enabled: false
+        traefik:
           enabled: true
-          ingressClassName: traefik
           hosts:
             - host: headlamp.lab
               paths:
                 - path: /
-                  pathType: ImplementationSpecific
+                  kind: Rule
   destination:
     server: https://kubernetes.default.svc
     namespace: headlamp

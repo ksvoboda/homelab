@@ -1,0 +1,32 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: headlamp
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    chart: headlamp
+    repoURL: https://kubernetes-sigs.github.io/headlamp/
+    targetRevision: 0.24.1  # It is best practice to pin a specific version
+    helm:
+      values: |
+        ingress:
+          enabled: true
+          ingressClassName: traefik
+          hosts:
+            - host: headlamp.lab
+              paths:
+                - path: /
+                  pathType: ImplementationSpecific
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: headlamp
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

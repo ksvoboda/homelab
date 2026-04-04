@@ -21,6 +21,6 @@ runcmd:
   - sed -i '/swap/d' /etc/fstab
   - echo "cgroup_enable=cpuset cgroup_enable=memory cgroup_memory=1" >> /etc/default/grub.d/k3s.cfg
   - update-grub
-  - curl -OL https://raw.githubusercontent.com/ksvoboda/homelab/refs/heads/main/setup/k3s-init.sh /home/kube
+  - curl -OL /home/kube/k3s-init.sh https://raw.githubusercontent.com/ksvoboda/homelab/refs/heads/main/setup/k3s-init.sh
 
 power_state: {mode: reboot, condition: true}

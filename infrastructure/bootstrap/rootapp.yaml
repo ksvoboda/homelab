@@ -14,7 +14,7 @@ spec:
     directory:
       recurse: true         # Optional: looks into subfolders within 'apps/'
   destination:
-    server: https://default.svc
+    server: https://kubernetes.default.svc
     namespace: argocd       # The root app itself lives in the argocd namespace
   syncPolicy:
     automated:              # This enables the "Auto Sync" you asked for

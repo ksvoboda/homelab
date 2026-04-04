@@ -15,8 +15,12 @@ spec:
       values: |
         ingress:
           enabled: true
-          ingressClassName: traefik
-          host: headlamp.lab
+          ingressClassName: nginx
+          hosts:
+            - host: headlamp.lab
+              paths:
+                - path: /
+                  pathType: Prefix
   destination:
     server: https://kubernetes.default.svc
     namespace: headlamp

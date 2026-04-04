@@ -15,7 +15,7 @@ spec:
       values: |
         ingress:
           enabled: true
-          ingressClassName: nginx
+          ingressClassName: traefik
           hosts:
             - host: headlamp.lab
               paths:

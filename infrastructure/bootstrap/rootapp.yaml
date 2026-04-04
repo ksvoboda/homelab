@@ -10,7 +10,7 @@ spec:
   source:
     repoURL: https://github.com/ksvoboda/homelab
     targetRevision: HEAD
-    path: apps/             # This is the folder where your longhorn.yaml, etc. live
+    path: infrastucture/apps/             # This is the folder where your longhorn.yaml, etc. live
     directory:
       recurse: true         # Optional: looks into subfolders within 'apps/'
   destination:

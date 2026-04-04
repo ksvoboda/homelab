@@ -10,7 +10,7 @@ spec:
   source:
     chart: headlamp
     repoURL: https://kubernetes-sigs.github.io/headlamp/
-    targetRevision: 0.24.1  # It is best practice to pin a specific version
+    targetRevision: 0.41.0  # It is best practice to pin a specific version
     helm:
       values: |
         ingress:

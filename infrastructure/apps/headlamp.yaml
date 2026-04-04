@@ -17,6 +17,10 @@ spec:
           enabled: false
         traefik:
           enabled: true
+          extraServices:
+            - name: headlamp
+              port: 80
+              namespace: headlamp 
           hosts:
             - host: headlamp.lab
               paths:

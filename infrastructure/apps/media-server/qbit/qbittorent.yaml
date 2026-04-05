@@ -29,18 +29,8 @@ spec:
         env:
         - name: DOT
           value: "off"
-        - name: DNS_KEEP_NAMESERVER
-          value: "on"
-        - name: VPN_ENDPOINT_PORT
-          value: "51820"
-        - name: HTTP_CONTROL_SERVER_ADDRESS
-          value: ":8000"
         - name: HEALTH_WAIT_DURATION
           value: "40s" 
-        - name: FIREWALL_OUTBOUND_SUBNETS
-          value: "10.42.0.0/16,10.43.0.0/16"
-        - name: DNS_ADDRESS
-          value: "1.1.1.1" 
         - name: VPN_SERVICE_PROVIDER
           value: "protonvpn"
         - name: VPN_TYPE
@@ -51,7 +41,7 @@ spec:
               name: vpn-creds
               key: wireguard_private_key
         - name: SERVER_COUNTRIES
-          value: ""
+          value: "Germany"
         ports:
         - containerPort: 8080 
           name: http

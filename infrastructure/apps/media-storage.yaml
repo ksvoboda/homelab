@@ -1,40 +1,50 @@
 apiVersion: v1
 kind: Secret
 metadata:
-  name: smb-creds
+  name: smbcreds
   namespace: media
 stringData:
   username: "media_server"
   password: "7tQsSH8V^f&^C&"
 ---
 apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: jellyfin-config-pvc
+  namespace: media
+spec:
+  accessModes: [ "ReadWriteOnce" ]
+  storageClassName: longhorn 
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: smb-media-pv
+  name: jellyfin-media-pv
 spec:
   capacity:
-    storage: 2Ti
-  accessModes: ["ReadWriteMany"]
-  persistentVolumeReclaimPolicy: Retain
-  mountOptions: ["dir_mode=0777", "file_mode=0777", "noperm"]
+    storage: 10Ti
+  accessModes: [ "ReadWriteMany" ]
   csi:
     driver: smb.csi.k8s.io
-    volumeHandle: media-share-unique-id
+    volumeHandle: jellyfin-media-unique-id
     volumeAttributes:
-      source: "//192.168.0.82/jellyfin" # UPDATE THIS
+      source: "//192.168.0.82/jellyfin"
     nodeStageSecretRef:
-      name: smb-creds
+      name: smbcreds
       namespace: media
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: media-pvc
+  name: jellyfin-media-pvc
   namespace: media
 spec:
-  accessModes: ["ReadWriteMany"]
+  accessModes: [ "ReadWriteMany" ]
+  storageClassName: ""
+  volumeName: jellyfin-media-pv
   resources:
     requests:
-      storage: 2Ti
-  volumeName: smb-media-pv
-  storageClassName: ""
+      storage: 10Ti

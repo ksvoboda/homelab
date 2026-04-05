@@ -1,44 +1,23 @@
-apiVersion: argoproj.io/v1alpha1
-kind: Application
+apiVersion: apps/v1
+kind: Deployment
 metadata:
   name: jellyfin
-  namespace: argocd
-spec:
-  project: default
-  source:
-    chart: app-template
-    repoURL: https://jellyfin.github.io/jellyfin-helm
-    targetRevision: 2.8.0
-    helm:
-      values: |
-        controllers:
-          main:
-            containers:
-              main:
-                image: { repository: jellyfin/jellyfin, tag: latest }
-        persistence:
-          media:
-            existingClaim: media-pvc
-            globalMounts: [{ path: /data }]
-        service:
-          main:
-            controller: main
-            ports:
-              http: { port: 8096 }
-  destination: 
-    server: "https://kubernetes.default.svc"
-    namespace: media
----
-apiVersion: traefik.io/v1alpha1
-kind: IngressRoute
-metadata:
-  name: jellyfin-route
   namespace: media
 spec:
-  entryPoints: [web]
-  routes:
-  - match: Host(`jellyfin.lab`)
-    kind: Rule
-    services: 
-    - name: jellyfin
-      port: 8096
+  template:
+    spec:
+      containers:
+      - name: jellyfin
+        image: jellyfin/jellyfin:latest
+        volumeMounts:
+        - name: config-storage
+          mountPath: /config
+        - name: media-storage
+          mountPath: /media
+      volumes:
+      - name: config-storage
+        persistentVolumeClaim:
+          claimName: jellyfin-config-pvc
+      - name: media-storage
+        persistentVolumeClaim:
+          claimName: jellyfin-media-pvc

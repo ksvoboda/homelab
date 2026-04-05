@@ -26,6 +26,8 @@ spec:
           value: "on"
         - name: VPN_ENDPOINT_PORT
           value: "51820"
+        - name: HTTP_CONTROL_SERVER_ADDRESS
+          value: ":8000"
         - name: VPN_SERVICE_PROVIDER
           value: "protonvpn"
         - name: VPN_TYPE

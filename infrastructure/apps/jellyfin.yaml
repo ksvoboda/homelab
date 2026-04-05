@@ -29,7 +29,7 @@ spec:
     server: "https://kubernetes.default.svc"
     namespace: media
 ---
-apiVersion: traefik.containo.us/v1alpha1
+apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
   name: jellyfin-route

@@ -1,0 +1,44 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: jellyfin
+  namespace: argocd
+spec:
+  project: default
+  source:
+    chart: app-template
+    repoURL: https://github.io
+    targetRevision: 3.1.0
+    helm:
+      values: |
+        controllers:
+          main:
+            containers:
+              main:
+                image: { repository: jellyfin/jellyfin, tag: latest }
+        persistence:
+          media:
+            existingClaim: media-pvc
+            globalMounts: [{ path: /data }]
+        service:
+          main:
+            controller: main
+            ports:
+              http: { port: 8096 }
+  destination: 
+    server: "https://kubernetes.default.svc"
+    namespace: media
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: jellyfin-route
+  namespace: media
+spec:
+  entryPoints: [web]
+  routes:
+  - match: Host(`jellyfin.lab`)
+    kind: Rule
+    services: 
+      name: jellyfin
+      port: 8096

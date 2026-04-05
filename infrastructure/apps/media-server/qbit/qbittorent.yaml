@@ -23,7 +23,9 @@ spec:
         image: qmcgaw/gluetun:latest
         securityContext:
           capabilities:
-            add: ["NET_ADMIN"]
+            add: 
+              - NET_ADMIN
+              - NET_RAW
         env:
         - name: DOT
           value: "off"
@@ -35,6 +37,10 @@ spec:
           value: ":8000"
         - name: HEALTH_WAIT_DURATION
           value: "40s" 
+        - name: FIREWALL_OUTBOUND_SUBNETS
+          value: "10.42.0.0/16,10.43.0.0/16"
+        - name: DNS_ADDRESS
+          value: "1.1.1.1" 
         - name: VPN_SERVICE_PROVIDER
           value: "protonvpn"
         - name: VPN_TYPE

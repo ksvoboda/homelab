@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: qbittorrent
+  namespace: media
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: qbit
+  template:
+    metadata:
+      labels:
+        app: qbit
+    spec:
+      containers:
+      - name: gluetun
+        image: qmcgaw/gluetun:latest
+        securityContext:
+          capabilities:
+            add: ["NET_ADMIN"]
+        env:
+        - name: VPN_SERVICE_PROVIDER
+          value: "protonvpn"
+        - name: VPN_TYPE
+          value: "wireguard"
+        - name: WIREGUARD_PRIVATE_KEY
+          valueFrom:
+            secretKeyRef:
+              name: vpn-creds
+              key: wireguard_private_key
+        - name: SERVER_COUNTRIES
+          value: "Netherlands"
+        ports:
+        - containerPort: 8080 
+          name: http
+      - name: qbit
+        image: lscr.io/linuxserver/qbittorrent:latest
+        env:
+        - name: WEBUI_PORT
+          value: "8080"
+        volumeMounts:
+        - name: config
+          mountPath: /config
+        - name: media
+          mountPath: /media
+      volumes:
+      - name: config
+        persistentVolumeClaim:
+          claimName: qbit-config
+      - name: media
+        persistentVolumeClaim:
+          claimName: jellyfin-media-pvc

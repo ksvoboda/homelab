@@ -1,11 +1,23 @@
-apiVersion: v1
-kind: Secret
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
 metadata:
-  name: smbcreds
+  name: smbcreds-external
   namespace: media
-stringData:
-  username: "media_server"
-  password: "7tQsSH8V^f&^C&"
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: bitwarden-store
+    kind: ClusterSecretStore
+  target:
+    name: smbcreds
+    creationPolicy: Owner
+  data:
+  - secretKey: username
+    remoteRef:
+      key: 23519f00-e3c3-4998-b1b8-b42300fa25b3
+  - secretKey: password
+    remoteRef:
+      key: b096fe51-55b6-4253-bee1-b42300f8c8f4
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim

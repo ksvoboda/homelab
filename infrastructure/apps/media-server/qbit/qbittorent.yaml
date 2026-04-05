@@ -31,6 +31,8 @@ spec:
           value: "off"
         - name: HEALTH_WAIT_DURATION
           value: "40s" 
+        - name: FIREWALL
+          value: "off"  
         - name: VPN_SERVICE_PROVIDER
           value: "protonvpn"
         - name: VPN_TYPE

@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: radarr
+  namespace: media
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: radarr
+  template:
+    metadata:
+      labels:
+        app: radarr
+    spec:
+      containers:
+      - name: radarr
+        image: linuxserver/radarr:latest
+        ports:
+        - containerPort: 7878
+        volumeMounts:
+        - name: config
+          mountPath: /config
+        - name: media
+          mountPath: /media
+      volumes:
+      - name: config
+        persistentVolumeClaim:
+          claimName: radarr-config
+      - name: media
+        persistentVolumeClaim:
+          claimName: radarr-media-pvc

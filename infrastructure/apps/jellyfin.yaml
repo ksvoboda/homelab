@@ -40,5 +40,5 @@ spec:
   - match: Host(`jellyfin.lab`)
     kind: Rule
     services: 
-      name: jellyfin
+    - name: jellyfin
       port: 8096

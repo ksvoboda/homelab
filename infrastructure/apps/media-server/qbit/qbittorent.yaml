@@ -20,6 +20,12 @@ spec:
           capabilities:
             add: ["NET_ADMIN"]
         env:
+        - name: DOT
+          value: "off"
+        - name: DNS_KEEP_NAMESERVER
+          value: "on"
+        - name: VPN_ENDPOINT_PORT
+          value: "51820"
         - name: VPN_SERVICE_PROVIDER
           value: "protonvpn"
         - name: VPN_TYPE

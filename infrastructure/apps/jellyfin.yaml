@@ -7,8 +7,8 @@ spec:
   project: default
   source:
     chart: app-template
-    repoURL: https://github.io
-    targetRevision: 3.1.0
+    repoURL: https://jellyfin.github.io/jellyfin-helm
+    targetRevision: 3.0.0
     helm:
       values: |
         controllers:

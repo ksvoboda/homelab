@@ -30,7 +30,7 @@ spec:
               name: vpn-creds
               key: wireguard_private_key
         - name: SERVER_COUNTRIES
-          value: "Netherlands"
+          value: ""
         ports:
         - containerPort: 8080 
           name: http

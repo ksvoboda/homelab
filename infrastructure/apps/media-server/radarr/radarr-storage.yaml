@@ -9,16 +9,3 @@ spec:
   resources:
     requests:
       storage: 5Gi
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: radarr-media-pvc
-  namespace: media
-spec:
-  accessModes: [ReadWriteMany]
-  storageClassName: ""
-  volumeName: jellyfin-media-pv
-  resources:
-    requests:
-      storage: 10Ti

@@ -10,22 +10,13 @@ spec:
   source:
     chart: headlamp
     repoURL: https://kubernetes-sigs.github.io/headlamp/
-    targetRevision: 0.41.0  # It is best practice to pin a specific version
+    targetRevision: 0.41.0
     helm:
       values: |
         ingress:
-          enabled: false
-        traefik:
           enabled: true
-          extraServices:
-            - name: headlamp
-              port: 80
-              namespace: headlamp 
-          hosts:
-            - host: headlamp.lab
-              paths:
-                - path: /
-                  kind: Rule
+          host: longhorn.lab
+          ingressClassName: traefik
   destination:
     server: https://kubernetes.default.svc
     namespace: headlamp

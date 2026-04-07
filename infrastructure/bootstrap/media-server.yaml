@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: root-app
+  name: media-server
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
@@ -10,9 +10,9 @@ spec:
   source:
     repoURL: https://github.com/ksvoboda/homelab
     targetRevision: HEAD
-    path: infrastructure/apps/ 
+    path: infrastructure/apps/media-server 
     directory:
-      recurse: false  
+      recurse: true  
   destination:
     server: https://kubernetes.default.svc
     namespace: argocd      

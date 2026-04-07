@@ -1,7 +1,7 @@
 apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
 metadata:
-  name: jellyfin-headers
+  name: seerr-headers
   namespace: media
 spec:
   headers:

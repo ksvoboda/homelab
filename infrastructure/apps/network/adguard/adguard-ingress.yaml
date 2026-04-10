@@ -1,0 +1,49 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: adguard-ingress
+  namespace: adguard
+  annotations:
+    traefik.ingress.kubernetes.io/router.middlewares: media-media-headers@kubernetescrd
+spec:
+  rules:
+  - host: adguard.lab
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: adguard-svc
+            port:
+              number: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: adguard-svc
+  namespace: media
+  annotations:
+    kube-vip.io/loadbalancerIPs: "192.168.0.50"
+spec:
+  type: LoadBalancer
+  selector:
+    app: adguard
+  ports:
+    - name: dns-udp
+      protocol: UDP
+      port: 53
+      targetPort: 53
+    - name: dns-tcp
+      protocol: TCP
+      port: 53
+      targetPort: 53
+    - name: dhcp-udp
+      protocol: UDP
+      port: 67
+      targetPort: 67
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 80
+

@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: adguard
+  namespace: adguard
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: adguard
+  template:
+    metadata:
+      labels:
+        app: adguard
+    spec:
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+      containers:
+      - name: adguard
+        image: adguard/adguardhome:latest
+        ports:
+        - containerPort: 3000 # Setup UI
+        - containerPort: 80    # Dashboard
+        - containerPort: 53    # DNS (UDP/TCP)
+        - containerPort: 67    # DHCP (UDP)
+        volumeMounts:
+        - name: config
+          mountPath: /opt/adguardhome/conf
+        - name: work
+          mountPath: /opt/adguardhome/work
+      volumes:
+      - name: config
+        persistentVolumeClaim:
+          claimName: adguard-config
+      - name: work
+        emptyDir: {}

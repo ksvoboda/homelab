@@ -40,6 +40,8 @@ spec:
               fieldPath: spec.nodeName
         - name: vip_interface
           value: ens18
+        - name: svc_enable
+          value: "true" # Required for Service LoadBalancers like AdGuard
         - name: vip_subnet
           value: "32"
         - name: cp_enable

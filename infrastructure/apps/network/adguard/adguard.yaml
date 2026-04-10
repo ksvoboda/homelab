@@ -22,7 +22,7 @@ spec:
         image: adguard/adguardhome:latest
         ports:
         - containerPort: 3000 # Setup UI
-        - containerPort: 80    # Dashboard
+#        - containerPort: 80    # Dashboard
         - containerPort: 53    # DNS (UDP/TCP)
         - containerPort: 67    # DHCP (UDP)
         volumeMounts:

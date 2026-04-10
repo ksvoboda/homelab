@@ -4,7 +4,7 @@ metadata:
   name: adguard-ingress
   namespace: adguard
   annotations:
-    traefik.ingress.kubernetes.io/router.middlewares: media-media-headers@kubernetescrd
+#    traefik.ingress.kubernetes.io/router.middlewares: media-media-headers@kubernetescrd
 spec:
   rules:
   - host: adguard.lab
@@ -44,6 +44,6 @@ spec:
       targetPort: 67
     - name: http
       protocol: TCP
-      port: 3000
+      port: 80
       targetPort: 3000
 

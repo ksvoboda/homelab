@@ -30,9 +30,13 @@ spec:
         - name: DOT
           value: "off"
         - name: HEALTH_WAIT_DURATION
-          value: "40s" 
+          value: "60s" 
         - name: FIREWALL
           value: "off"  
+        - name: HEALTH_TARGET_ADDRESS
+          value: "1.1.1.1:443"
+        - name: WIREGUARD_MTU
+          value: "1280"
         - name: VPN_SERVICE_PROVIDER
           value: "protonvpn"
         - name: VPN_TYPE
@@ -47,6 +51,9 @@ spec:
         ports:
         - containerPort: 8080 
           name: http
+        volumeMounts:
+        - mountPath: /dev/net/tun
+          name: tun-device
       - name: qbit
         image: lscr.io/linuxserver/qbittorrent:latest
         env:
@@ -64,3 +71,6 @@ spec:
       - name: media
         persistentVolumeClaim:
           claimName: jellyfin-media-pvc
+      - name: tun-device
+        hostPath:
+          path: /dev/net/tun

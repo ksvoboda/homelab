@@ -39,6 +39,12 @@ spec:
   capacity:
     storage: 10Ti
   accessModes: [ "ReadWriteMany" ]
+  mountOptions:
+    - dir_mode=0777
+    - file_mode=0777
+    - uid=1000
+    - gid=1000
+    - noperm 
   csi:
     driver: smb.csi.k8s.io
     volumeHandle: jellyfin-media-unique-id

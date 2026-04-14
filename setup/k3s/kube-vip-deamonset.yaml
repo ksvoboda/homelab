@@ -42,6 +42,8 @@ spec:
           value: ens18
         - name: svc_enable
           value: "true" # Required for Service LoadBalancers like AdGuard
+        - name: svc_election
+          value: "true"
         - name: vip_subnet
           value: "32"
         - name: cp_enable

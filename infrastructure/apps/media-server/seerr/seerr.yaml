@@ -20,7 +20,7 @@ spec:
         - containerPort: 8989
         volumeMounts:
         - name: config
-          mountPath: /config
+          mountPath: /app/config
         - name: media
           mountPath: /media
       volumes:

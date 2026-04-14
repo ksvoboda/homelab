@@ -45,6 +45,7 @@ spec:
     - uid=1000
     - gid=1000
     - noperm 
+    - rw
   csi:
     driver: smb.csi.k8s.io
     volumeHandle: jellyfin-media-unique-id

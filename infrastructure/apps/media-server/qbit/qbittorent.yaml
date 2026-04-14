@@ -32,6 +32,8 @@ spec:
           value: "off"
         - name: HEALTH_WAIT_DURATION
           value: "60s" 
+        - name: VPN_PORT_FORWARDING
+          value: "on"
         - name: FIREWALL
           value: "off"  
         - name: HEALTH_TARGET_ADDRESS

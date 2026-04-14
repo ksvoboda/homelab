@@ -22,7 +22,6 @@ spec:
       - name: gluetun
         image: qmcgaw/gluetun:latest
         securityContext:
-          privileged: true
           capabilities:
             add: 
               - NET_ADMIN
@@ -34,8 +33,6 @@ spec:
           value: "60s" 
         - name: VPN_PORT_FORWARDING
           value: "on"
-        - name: FIREWALL
-          value: "off"  
         - name: HEALTH_TARGET_ADDRESS
           value: "1.1.1.1:443"
         - name: WIREGUARD_MTU

@@ -51,6 +51,7 @@ spec:
     volumeHandle: jellyfin-media-unique-id
     volumeAttributes:
       source: "//192.168.0.82/jellyfin"
+      mountOptions: "uid=1000,gid=1000,noperm,dir_mode=0777,file_mode=0777,wr"
     nodeStageSecretRef:
       name: smbcreds
       namespace: media

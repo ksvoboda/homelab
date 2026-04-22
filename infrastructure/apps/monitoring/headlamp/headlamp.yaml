@@ -20,7 +20,7 @@ spec:
         - "-in-cluster"
         - "-kubeconfig="
         ports:
-        - containerPort: 8080
+        - containerPort: 4466
         volumeMounts:
         - name: headlamp-config
           mountPath: /root/.config/headlamp

@@ -18,6 +18,7 @@ spec:
         image: ghcr.io/headlamp-k8s/headlamp:latest
         args:
         - "-in-cluster"
+        - "-kubeconfig="
         ports:
         - containerPort: 8080
         volumeMounts:

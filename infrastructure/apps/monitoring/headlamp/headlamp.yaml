@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: headlamp
+  namespace: monitoring
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: headlamp
+  template:
+    metadata:
+      labels:
+        app: headlamp
+    spec:
+      containers:
+      - name: headlamp
+        image: ghcr.io/headlamp-k8s/headlamp:latest
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+        - name: headlamp-config
+          mountPath: /root/.config/headlamp
+      volumes:
+      - name: headlamp-config
+        persistentVolumeClaim:
+          claimName: headlamp-config

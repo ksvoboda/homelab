@@ -25,3 +25,4 @@ spec:
       - name: headlamp-config
         persistentVolumeClaim:
           claimName: headlamp-config
+      serviceAccountName: headlamp-admin

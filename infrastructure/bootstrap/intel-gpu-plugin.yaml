@@ -15,8 +15,8 @@ spec:
           intel.feature.node.kubernetes.io/gpu: 'true'
         sharedDevNum: 5
   destination:
-    server: https://default.svc
-    namespace: kube-system
+    server: https://kubernetes.default.svc
+    namespace: argocd
   syncPolicy:
     automated:
       prune: true

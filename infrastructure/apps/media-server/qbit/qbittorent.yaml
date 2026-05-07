@@ -2,47 +2,31 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: qbittorrent
-  namespace: media
+  labels:
+    app: qbittorrent
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: qbit
+      app: qbittorrent
   template:
     metadata:
       labels:
-        app: qbit
+        app: qbittorrent
     spec:
-      securityContext:
-        fsGroup: 1000
-        runAsUser: 1000
-      strategy:
-        type: Recreate 
-      selector:
-        matchLabels:
-          app: qbit
       containers:
+      # --- Gluetun Sidecar ---
       - name: gluetun
         image: qmcgaw/gluetun:latest
         securityContext:
           capabilities:
-            add: 
-              - NET_ADMIN
-              - NET_RAW
+            add:
+              - NET_ADMIN # Required for VPN tunnel and firewall rules
         env:
-        - name: HEALTH_WAIT_DURATION
-          value: "60s" 
-        - name: VPN_PORT_FORWARDING
-          value: "on"
-        - name: VPN_PORT_FORWARDING_UP_COMMAND
-          value: >-
-            /bin/sh -c '
-            sleep 5;
-            PORT=$(cat /tmp/gluetun/forwarded_port);
-            wget --post-data="json={\"listen_port\":$PORT}" http://localhost:8080/api/v2/app/setPreferences;
-            '
-        - name: HEALTH_TARGET_ADDRESS
-          value: "1.1.1.1:443"
+        - name: FIREWALL_INPUT_PORTS
+          value: "8080" # Allows access to the Web UI within the pod
+        - name: FIREWALL_OUTBOUND_SUBNETS
+          value: "10.42.0.0/16" # Essential for internal k3s service discovery
         - name: WIREGUARD_MTU
           value: "1280"
         - name: VPN_SERVICE_PROVIDER
@@ -57,16 +41,21 @@ spec:
         - name: SERVER_COUNTRIES
           value: "Netherlands"
         ports:
-        - containerPort: 8000 
-          name: http
+        - containerPort: 8080
+          name: http-webui
         volumeMounts:
         - mountPath: /dev/net/tun
           name: tun-device
-      - name: qbit
+      # --- qBittorrent ---
+      - name: qbittorrent
         image: lscr.io/linuxserver/qbittorrent:latest
         env:
-        - name: WEBUI_PORT
-          value: "8080"
+          - name: WEBUI_PORT
+            value: "8080"
+          - name: PUID
+            value: "1000"
+          - name: PGID
+            value: "1000"
         volumeMounts:
         - name: config
           mountPath: /config
@@ -75,7 +64,7 @@ spec:
       volumes:
       - name: config
         persistentVolumeClaim:
-          claimName: qbit-config
+          claimName: qbittorrent-config
       - name: media
         persistentVolumeClaim:
           claimName: jellyfin-media-pvc

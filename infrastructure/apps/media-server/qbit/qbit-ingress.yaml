@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: qbit-svc
+  name: qbittorrent-svc
   namespace: media
 spec:
   selector:
-    app: qbit
+    app: qbittorrent
   ports:
   - port: 80
     targetPort: 8080
@@ -13,7 +13,7 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: qbit-ingress
+  name: qbittorrent-ingress
   namespace: media
 spec:
   rules:
@@ -24,6 +24,6 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: qbit-svc
+            name: qbittorrent-svc
             port:
               number: 80

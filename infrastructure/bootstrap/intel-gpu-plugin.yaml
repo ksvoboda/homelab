@@ -19,7 +19,12 @@ spec:
   destination:
     server: https://kubernetes.default.svc
     namespace: kube-system
+  ignoreDifferences:
+    - group: nfd.k8s-sigs.io
+      kind: NodeFeatureRule
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
+    syncOptions:
+      - SkipDryRunOnMissingResource=true # Important for missing CRDs

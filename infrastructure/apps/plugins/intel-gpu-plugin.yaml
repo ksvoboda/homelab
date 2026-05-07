@@ -1,14 +1,13 @@
-apiVersion: argoproj.io/v1alpha1
-kind: Application
+apiVersion: apps/v1
+kind: Deployment
 metadata:
   name: intel-gpu-plugin
-  namespace: argocd
+  namespace: plugins
 spec:
   project: default
   source:
-    chart: intel-device-plugins-gpu
+    chart: intel-device-plugins-gpu-plugin
     repoURL: https://intel.github.io/helm-charts/
-    targetRevision: 0.35.0
     helm:
       values: |
         nodeSelector:

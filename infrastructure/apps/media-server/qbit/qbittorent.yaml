@@ -40,8 +40,6 @@ spec:
           value: "1.1.1.1:443"
         - name: FIREWALL_INPUT_PORTS
           value: "8080" # Allows access to the Web UI within the pod
-        - name: FIREWALL_OUTBOUND_SUBNETS
-          value: "10.42.0.0/16" # Essential for internal k3s service discovery
         - name: WIREGUARD_MTU
           value: "1280"
         - name: VPN_SERVICE_PROVIDER

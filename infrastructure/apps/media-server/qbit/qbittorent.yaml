@@ -29,6 +29,8 @@ spec:
           value: "60s" 
         - name: VPN_PORT_FORWARDING
           value: "on"
+        - name: PORT_FORWARD_ONLY
+          value: "on"
         - name: VPN_PORT_FORWARDING_UP_COMMAND
           value: >-
             /bin/sh -c '

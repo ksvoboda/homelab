@@ -13,6 +13,9 @@ spec:
       labels:
         app: qbit
     spec:
+      securityContext:
+        fsGroup: 1000
+        runAsUser: 1000
       strategy:
         type: Recreate 
       selector:
@@ -64,6 +67,10 @@ spec:
         env:
         - name: WEBUI_PORT
           value: "8080"
+        - name: PUID
+          value: "1000"
+        - name: PGID
+          value: "1000"
         volumeMounts:
         - name: config
           mountPath: /config

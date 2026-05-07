@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Application
 metadata:
   name: intel-gpu-plugin
-  namespace: plugins
+  namespace: argocd
 spec:
   project: default
   source:

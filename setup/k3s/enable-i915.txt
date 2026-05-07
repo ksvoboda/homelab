@@ -1,0 +1,11 @@
+lspci -nnk | grep -A 2 VGA   //prints VGA device, should print GPU
+
+sudo apt install -y linux-generic linux-firmware intel-media-va-driver-non-free
+
+sudo modprobe i915    //enables i915
+
+lsmod | grep i915    //must show i915
+
+ls -l /dev/dri      //must show renderD128
+
+kubectl label node <your-ubuntu-vm-hostname> intel.feature.node.kubernetes.io/gpu=true

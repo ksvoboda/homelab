@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: intel-gpu-plugin
+  namespace: argocd
+spec:
+  project: default
+  source:
+    chart: intel-device-plugins-gpu
+    repoURL: https://intel.github.io/helm-charts/
+    targetRevision: 0.35.0
+    helm:
+      values: |
+        sharedDevNum: 5
+        nodeSelector:
+          intel.feature.node.kubernetes.io/gpu: 'true'
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    createNamespace: true

@@ -20,6 +20,11 @@ spec:
       containers:
       - name: jellyfin
         image: jellyfin/jellyfin:latest
+        resources:
+          limits:
+            ://intel.com: 1
+          requests:
+            ://intel.com: 1
         env:
         - name: PUID
           value: "1000"

@@ -1,4 +1,5 @@
-apiVersion: apps/v1
+# CHANGE THIS LINE from apps/v1 to argoproj.io/v1alpha1
+apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: intel-gpu-plugin
@@ -6,16 +7,17 @@ metadata:
 spec:
   project: default
   source:
-    chart: intel-device-plugins-gpu-plugin
-    repoURL: https://intel.github.io/helm-charts/
+    chart: intel-device-plugins-gpu
+    repoURL: https://github.io
+    targetRevision: 0.35.0
     helm:
       values: |
+        sharedDevNum: 5
         nodeSelector:
           intel.feature.node.kubernetes.io/gpu: 'true'
-        sharedDevNum: 5
   destination:
     server: https://kubernetes.default.svc
-    namespace: argocd
+    namespace: kube-system
   syncPolicy:
     automated:
       prune: true

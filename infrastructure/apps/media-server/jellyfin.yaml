@@ -44,5 +44,20 @@ spec:
       - name: media-storage
         persistentVolumeClaim:
           claimName: jellyfin-media-pvc
+  syncPolicy:
+    automated:              
+      prune: true          
+      selfHeal: true       
+    syncOptions:
+      - CreateNamespace=true 
+      - RespectIgnoreDifferences=true
+  ignoreDifferences:
+    - group: apps
+      kind: Deployment
+      jsonPointers:
+        # Prevents ArgoCD from drifting over string vs integer formatting differences
+        - /spec/template/spec/containers/0/resources/requests/gpu.intel.com~1i915
+        - /spec/template/spec/containers/0/resources/limits/gpu.intel.com~1i915
+
 
 

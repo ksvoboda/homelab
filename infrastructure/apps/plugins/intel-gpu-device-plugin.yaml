@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: intel-gpu-device-plugin
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://intel.github.io/helm-charts/
+    chart: intel-device-plugins-gpu 
+    targetRevision: 0.36.0
+    helm:
+      values: |
+        sharedDevNum: 1
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kube-system
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

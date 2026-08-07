@@ -3,8 +3,6 @@ kind: Deployment
 metadata:
   name: jellyfin
   namespace: media
-  annotations:
-    argocd.argoproj.io/compare-options: ServerSideDiff=true
 spec:
   replicas: 1
   selector:

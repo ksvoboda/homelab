@@ -24,9 +24,9 @@ spec:
         image: jellyfin/jellyfin:latest
         resources:
         requests:
-          ://intel.com: "1 "
+          gpu.intel.com/i915: 1
         limits:
-          ://intel.com: "1 "
+          gpu.intel.com/i915: 1
         env:
         - name: PUID
           value: "1000"

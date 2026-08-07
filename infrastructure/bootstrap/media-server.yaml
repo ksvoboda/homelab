@@ -17,8 +17,22 @@ spec:
     server: https://kubernetes.default.svc
     namespace: argocd      
   syncPolicy:
-    automated:              
-      prune: true          
-      selfHeal: true       
+    automated:
+      prune: true
+      selfHeal: true
     syncOptions:
-      - CreateNamespace=true 
+      - CreateNamespace=true
+      - RespectIgnoreDifferences=true # Crucial: Enforces the rules below
+
+  # This tells ArgoCD to completely ignore the extra settings injected by the Intel Operator
+  ignoreDifferences:
+    - group: apps
+      kind: Deployment
+      name: jellyfin
+      namespace: media
+      jsonPathExpressions:
+        # Ignores the environment variables injected by the Intel webhook
+        - .spec.template.spec.containers[*].env
+        # Ignores the driver storage volumes injected by the Intel webhook
+        - .spec.template.spec.containers[*].volumeMounts
+        - .spec.template.spec.volumes

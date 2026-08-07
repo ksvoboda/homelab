@@ -26,7 +26,7 @@ spec:
   ignoreDifferences:
     - group: apps
       kind: Deployment
-      jsonPointers:
-        # Prevents ArgoCD from drifting over string vs integer formatting differences
-        - /spec/template/spec/containers/0/resources/requests/gpu.intel.com~1i915
-        - /spec/template/spec/containers/0/resources/limits/gpu.intel.com~1i915
+      jsonPathExpressions:
+        - .spec.template.spec.containers[*].resources.requests["://intel.com"]
+        - .spec.template.spec.containers[*].resources.limits["://intel.com"]
+

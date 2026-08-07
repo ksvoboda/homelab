@@ -27,7 +27,7 @@ spec:
     - group: apps
       kind: Deployment
       name: jellyfin
-      namespace: media
+      namespace: media-server
       jsonPathExpressions:
         - .spec.template.spec.containers[*].resources.requests["://intel.com"]
         - .spec.template.spec.containers[*].resources.limits["://intel.com"]

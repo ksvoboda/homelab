@@ -44,9 +44,3 @@ spec:
       - name: media-storage
         persistentVolumeClaim:
           claimName: jellyfin-media-pvc
-  syncPolicy:
-    automated:              
-      prune: true          
-      selfHeal: true       
-    syncOptions:
-      - CreateNamespace=true 

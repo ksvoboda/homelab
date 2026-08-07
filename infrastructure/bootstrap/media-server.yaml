@@ -33,6 +33,7 @@ spec:
       jsonPathExpressions:
         # Ignores the environment variables injected by the Intel webhook
         - .spec.template.spec.containers[*].env
+        - .spec.template.spec.containers[*].resources
         # Ignores the driver storage volumes injected by the Intel webhook
         - .spec.template.spec.containers[*].volumeMounts
         - .spec.template.spec.volumes

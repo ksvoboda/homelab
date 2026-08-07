@@ -22,13 +22,3 @@ spec:
       selfHeal: true       
     syncOptions:
       - CreateNamespace=true 
-      - RespectIgnoreDifferences=true
-  ignoreDifferences:
-    - group: apps
-      kind: Deployment
-      name: jellyfin
-      namespace: media-server
-      jsonPathExpressions:
-        - .spec.template.spec.containers[*].resources.requests["://intel.com"]
-        - .spec.template.spec.containers[*].resources.limits["://intel.com"]
-

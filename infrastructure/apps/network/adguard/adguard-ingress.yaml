@@ -25,7 +25,7 @@ metadata:
   namespace: adguard
   annotations:
     svccontroller.k3s.cattle.io/enable-lb: "false" 
-    kube-vip.io/loadbalancerIPs: "192.168.0.50"
+    kube-vip.io/loadbalancerIPs: "192.168.0.20"
 spec:
   type: LoadBalancer
   externalTrafficPolicy: Local
